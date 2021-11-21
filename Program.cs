@@ -50,6 +50,42 @@ namespace TgBot
             var chatId = update.Message.Chat.Id;
             var messageText = update.Message.Text;
 
+            switch (messageText)
+            {
+                case "Добавить профиль ✅":
+                    Message addProfile = await client.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Вы добавили профиль",
+                        replyMarkup: GetButtons(),
+                        cancellationToken: cancellationToken);
+                    break;
+                case "Добавить профиль":
+                    Message addProfile2 = await client.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Вы добавили профиль",
+                        replyMarkup: GetButtons(),
+                        cancellationToken: cancellationToken);
+                    break;
+                case "Удалить профиль ❎":
+                    Message delProfile = await client.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Вы удалили профиль",
+                        replyMarkup: GetButtons(),
+                        cancellationToken: cancellationToken);
+                    break;
+                case "Удалить профиль":
+                    Message delProfile2 = await client.SendTextMessageAsync(
+                        chatId: chatId,
+                        text: "Вы удалили профиль",
+                        replyMarkup: GetButtons(),
+                        cancellationToken: cancellationToken);
+                    break;
+            }
+        }
+
+        private static ReplyKeyboardMarkup GetButtons()
+        {
+
             ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
             {
                 new KeyboardButton[] {"Добавить профиль ✅", "Удалить профиль ❎"},
@@ -57,13 +93,7 @@ namespace TgBot
             {
                 ResizeKeyboard = true
             };
-
-            Message sentMessage = await client.SendTextMessageAsync(
-                chatId: chatId,
-                text: "Test",
-                replyMarkup: replyKeyboardMarkup,
-                cancellationToken: cancellationToken
-            );
+            return replyKeyboardMarkup;
         }
 
         private static Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken cancellationToken)
