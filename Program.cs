@@ -6,6 +6,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace TgBot
 {
@@ -39,6 +40,32 @@ namespace TgBot
             cts.Cancel();
         }
 
+        private static async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
+        {
+            if (update.Type != UpdateType.Message)
+                return;
+            if (update.Message!.Type != MessageType.Text)
+                return;
+
+            var chatId = update.Message.Chat.Id;
+            var messageText = update.Message.Text;
+
+            ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton[] {"Добавить профиль ✅", "Удалить профиль ❎"},
+            })
+            {
+                ResizeKeyboard = true
+            };
+
+            Message sentMessage = await client.SendTextMessageAsync(
+                chatId: chatId,
+                text: "Test",
+                replyMarkup: replyKeyboardMarkup,
+                cancellationToken: cancellationToken
+            );
+        }
+
         private static Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken cancellationToken)
         {
             var ErrorMessage = exception switch
@@ -50,25 +77,6 @@ namespace TgBot
 
             Console.WriteLine(ErrorMessage);
             return Task.CompletedTask;
-        }
-
-        private static async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
-        {
-            if (update.Type != UpdateType.Message)
-                return;
-            if (update.Message!.Type != MessageType.Text)
-                return;
-
-            var chatId = update.Message.Chat.Id;
-            var messageText = update.Message.Text;
-
-            Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
-
-            Message sentMessage = await client.SendTextMessageAsync(
-                chatId: chatId,
-                text: "You said:\n" + messageText,
-                cancellationToken: cancellationToken
-            );
         }
     }
 }
