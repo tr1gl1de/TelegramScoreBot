@@ -90,7 +90,6 @@ namespace TgBot
             {
                 ResizeKeyboard = true
             };
-
             return await botClient.SendTextMessageAsync(chatId: message.Chat.Id,
                                                         text: "Choose",
                                                         replyMarkup: replyKeyboardMarkup);
